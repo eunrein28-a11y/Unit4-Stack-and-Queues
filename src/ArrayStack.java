@@ -11,24 +11,43 @@ public class ArrayStack<T> implements Stack<T> {
     @Override
     public void push(T item) {
         // TODO: If the array is full, double its capacity; then store item at index n and increment n.
+        if(n == items.length){
+            T[] newItems = (T[]) new Object[items.length * 2];
+            for(int i = 0; i < items.length; i++){
+                newItems[i] = items[i];
+            }
+            this.items = newItems;
+        }
+        items[n] = item;
+        n++;
     }
 
     @Override
     public T pop() {
         // TODO: Decrement n, save and return that item, and set the popped slot to null to avoid loitering.
-        return null;
+        n--;
+        T item = items[n];
+        items[n] = null;
+        if(n == items.length / 4){
+            T[] newItems = (T[]) new Object[items.length / 2];
+            for(int i = 0; i < items.length / 2; i++){
+                newItems[i] = items[i];
+            }
+            this.items = newItems;
+        }
+        return item;
     }
 
     @Override
     public boolean isEmpty() {
         // TODO: Return true when n is zero.
-        return false;
+        return n == 0;
     }
 
     @Override
     public int size() {
         // TODO: Return the number of items currently in the stack.
-        return 0;
+        return n;
     }
 
     /**
@@ -39,7 +58,27 @@ public class ArrayStack<T> implements Stack<T> {
     public static boolean isValid(String s) {
         // TODO: Use an ArrayStack<Character> to check matching brackets. Push opening brackets;
         // for each closer, check that the most recent opener has the matching type.
-        return false;
+        ArrayStack<Character> checker = new ArrayStack<>();
+        if(s.length() == 0){
+            return true;
+        }
+        while(s.length() > 0){
+            Character c = s.charAt(0);
+            if(c.equals('(') || c.equals('[') || c.equals('{')){
+                checker.push(c);
+            }
+            if(c.equals(')') || c.equals(']') || c.equals('}')){
+                if(checker.isEmpty()){
+                    return false;
+                }
+                Character opening = checker.pop();
+                if(!((c.equals(')') && opening.equals('(')) || (c.equals(']') && opening.equals('[')) || (c.equals('}') && opening.equals('{')))){
+                    return false;
+                }
+            }
+            s = s.substring(1);
+        }
+        return checker.isEmpty();
     }
 
     static void check(String label, Object actual, Object expected) {

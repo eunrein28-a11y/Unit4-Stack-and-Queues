@@ -15,24 +15,32 @@ public class LinkedListStack<T> implements Stack<T> {
     @Override
     public void push(T item) {
         // TODO: Create a node, link it to the old first node, and make it the new first node.
+        Node newNode = new Node();
+        newNode.item = item;
+        n++;
+        newNode.next = first;
+        first = newNode;
     }
 
     @Override
     public T pop() {
         // TODO: Save the first item's value, move first to first.next, and return the saved value.
-        return null;
+        Node oldFirst = first;
+        first = first.next;
+        n--;
+        return oldFirst.item;
     }
 
     @Override
     public boolean isEmpty() {
         // TODO: Return true when the first node is null.
-        return false;
+        return first == null;
     }
 
     @Override
     public int size() {
         // TODO: Return the number of items currently in the stack.
-        return 0;
+        return n;
     }
 
     /**
@@ -42,7 +50,29 @@ public class LinkedListStack<T> implements Stack<T> {
     public static int evalRPN(String[] tokens) {
         // TODO: Use a LinkedListStack<Integer> to evaluate the tokens. For an operator,
         // pop the right operand first, then the left operand; apply the operator and push the result.
-        return 0;
+        LinkedListStack<Integer> numbers = new LinkedListStack<>();
+        for(String token : tokens) {
+            if(token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")){
+                Integer right = numbers.pop();
+                Integer left = numbers.pop();
+                if(token.equals("+")){
+                    numbers.push(left + right);
+                }
+                else if(token.equals("-")){
+                    numbers.push(left - right);
+                }
+                else if(token.equals("*")){
+                    numbers.push(left * right);
+                }
+                else{
+                    numbers.push(left / right);
+                }
+            }
+            else{
+                numbers.push(Integer.parseInt(token));
+            }
+        }
+        return numbers.pop();
     }
 
     static void check(String label, Object actual, Object expected) {

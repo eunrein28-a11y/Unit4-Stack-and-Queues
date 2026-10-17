@@ -15,12 +15,40 @@ public class QueueStackExercises {
     // Exercise 1: Reverse a stack using one queue.
     public static void reverseStack(Stack<Integer> s) {
         // TODO: implement using one Queue as auxiliary storage.
+        LinkedList<Integer> temp = new LinkedList<>();
+        while(!s.isEmpty()){
+            temp.add(s.pop());
+        }
+        while(!temp.isEmpty()){
+            s.push(temp.getFirst());
+            temp.removeFirst();
+        }
     }
 
     // Exercise 2: Reorder a queue sorted by absolute value into numeric order.
     // Must use one stack as auxiliary storage.
     public static void reorder(Queue<Integer> q) {
         // TODO: implement using one Stack as auxiliary storage.
+        Stack<Integer> temp = new Stack<>();
+        int s = q.size();
+        for(int i = 0; i < s; i++){
+            temp.push(q.remove());
+        }
+        while(!temp.isEmpty()){
+            q.add(temp.pop());
+        }
+        for(int i = 0; i < s; i++){
+            int j = q.remove();
+            if(j > 0){
+                temp.push(j);
+            }
+            else{
+                q.add(j);
+            }
+        }
+        while(!temp.isEmpty()){
+            q.add(temp.pop());
+        }
     }
 
     // Exercise 3: Return true if the queue is a palindrome.
@@ -28,7 +56,22 @@ public class QueueStackExercises {
     // Must use one Stack as auxiliary storage.
     public static boolean isPalindrome(Queue<Integer> q) {
         // TODO: implement using one Stack as auxiliary storage.
-        return false; // placeholder
+        Stack<Integer> temp = new Stack<>();
+        int s = q.size();
+        for(int i = 0; i < s; i++){
+            int j = q.remove();
+            q.add(j);
+            temp.push(j);
+        }
+        boolean b = true;
+        while(!temp.isEmpty()){
+            int j = q.remove();
+            q.add(j);
+            if(temp.pop() != j){
+                b = false;
+            }
+        }
+        return b;
     }
 
     // Exercise 4: Remove and return the minimum value from the stack.
@@ -36,7 +79,28 @@ public class QueueStackExercises {
     // Must use one queue as auxiliary storage.
     public static int removeMin(Stack<Integer> stack) {
         // TODO: implement using one Queue as auxiliary storage.
-        return 0; // placeholder
+        int min = Integer.MAX_VALUE;
+        LinkedList<Integer> temp = new LinkedList<>();
+        while(!stack.isEmpty()){
+            int n = stack.pop();
+            if(n < min){
+                min = n;
+            }
+            temp.add(n);
+        }
+        while(!temp.isEmpty()){
+            int n = temp.remove();
+            if(n != min){
+                stack.push(n);
+            }
+        }
+        while(!stack.isEmpty()){
+            temp.add(stack.pop());
+        }
+        while(!temp.isEmpty()){
+            stack.push(temp.remove());
+        }
+        return min; // placeholder
     }
 
     // --- Test helpers ---
